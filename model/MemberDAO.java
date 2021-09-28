@@ -30,7 +30,7 @@ public class MemberDAO {
 	   session.close();//반납
 	   return list;
    } 
-   // 회원가입
+   // 회원가입(파일업로드 X)
    public int memberInsert(MemberVO vo) {
 	   SqlSession session=sqlSessionFactory.openSession();
 	   int cnt=session.insert("memberInsert", vo);
@@ -38,6 +38,14 @@ public class MemberDAO {
 	   session.close();//반납
 	   return cnt;
    }
+   // // 회원가입(파일업로드 O)
+   public int memberInsertFile(MemberVO vo) {
+	   SqlSession session=sqlSessionFactory.openSession();
+	   int cnt=session.insert("memberInsertFile", vo);
+	   session.commit();
+	   session.close();//반납
+	   return cnt;
+   }   
    // 회원삭제
    public int memberDelete(int num) {
 	   SqlSession session=sqlSessionFactory.openSession();
@@ -68,7 +76,32 @@ public class MemberDAO {
 	   session.close();
 	   return user_name;
    }
-   
+   // 중복확인
+   public String memberDbcheck(String id) {
+	   SqlSession session=sqlSessionFactory.openSession();
+	   String dbId=session.selectOne("memberDbcheck", id);// id or null
+	   String idDouble="NO";
+	   if(dbId!=null) {
+		   idDouble="YES";
+	   }
+	   return idDouble; // YSE(중복), ON(중복아님)
+   }
+   // 파일삭제
+   public int memberDeleteFile(int num) {
+	   SqlSession session=sqlSessionFactory.openSession();
+	   int cnt=session.update("memberDeleteFile", num);
+	   session.commit();
+	   session.close();
+	   return cnt;
+   }
+   // 파일수정
+   public int memberUpdateFile(MemberVO vo) {
+	   SqlSession session=sqlSessionFactory.openSession();
+	   int cnt=session.update("memberUpdateFile", vo);
+	   session.commit();
+	   session.close();
+	   return cnt;
+   }
 }
 
 

@@ -20,6 +20,53 @@
      function frmreset(){
    	  document.form1.reset();
      }
+     function doublecheck(){
+    	 if($("#id").val()==''){
+    		 alert("아이디를 입력하세요.");
+    		 $("#id").focus();
+    		 return;
+    	 }
+    	 var id=$("#id").val();
+    	 $.ajax({ 
+    		 url : "<c:url value='/memberDbcheck.do'/>",
+    		 type : "POST",
+    		 data : {"id" : id},
+    		 success : dbCheck,  //함수(callback)
+    		 error : function(){ alert("error"); }    		 
+    	 });
+     }     
+     function dbCheck(data){
+    	 if(data !="NO"){
+    		 alert("중복된 아이디 입니다.");
+    		 $("#id").focus();
+    	 }else{
+    		 alert("사용가능한 아이디 입니다.");
+    		 $("#id").focus();
+    	 }
+     }
+     function add2(){
+    	 if($("#file").val()!=''){ // 파일이 첨부가 된 경우...
+    		 var formData=new FormData();
+    	     formData.append("file", $("input[name=file]")[0].files[0]);
+    		 $.ajax({
+    			 url : "<c:url value='/fileAdd.do'/>", // fileAdd.do(파일업로드)
+    			 type : "post",
+    			 data : formData,
+    			 processData : false,
+    			 contentType : false,
+    			 success : function(data){  //업로드된 실재파일 이름을 전달 받기
+    				// alert(data);
+    				$('#filename').val(data);  
+    			    document.form1.action="<c:url value='/memberInsert.do'/>?mode=fadd"; // text데이터를 저장하는 부분
+    			    document.form1.submit();//id, pass, name, age, email, phone, filename
+    			 },
+    			 error : function(){ alert("error"); }
+    		 });    		 
+    	 }else{ // 파일이 첨부 되지 않은 경우...
+    		 document.form1.action="<c:url value='/memberInsert.do'/>?mode=add"; 
+			 document.form1.submit();//id, pass, name, age, email, phone, X
+    	 }
+     }
   </script>
 </head>
 <body>
@@ -39,7 +86,12 @@
 	  <div class="form-group">
 	    <label class="control-label col-sm-2" for="id">아이디:</label>
 	    <div class="col-sm-10">
-	      <input type="text" class="form-control" id="id" name="id" placeholder="아이디를 입력하세요" style="width: 30%">
+	      <table>
+	        <tr>
+	          <td><input type="text" class="form-control" id="id" name="id" placeholder="아이디를 입력하세요"></td>
+	          <td><input type="button" value="중복체크" onclick="doublecheck()" class="btn btn-warning"></td>
+	        </tr>	        
+	      </table>
 	    </div>
 	  </div>
 	  <div class="form-group">
@@ -57,7 +109,7 @@
 	    <div class="form-group">
 	    <label class="control-label col-sm-2" for="age">나이:</label>
 	    <div class="col-sm-10">
-	      <input type="text" class="form-control" id="age" name="age" placeholder="나이를 입력하세요" style="width: 30%">
+	      <input type="text" class="form-control" id="age" name="age" placeholder="나이입력" style="width: 10%">
 	    </div>
 	  </div>
 	    <div class="form-group">
@@ -71,13 +123,19 @@
 	    <div class="col-sm-10">
 	      <input type="text" class="form-control" id="phone" name="phone" placeholder="전화번호를 입력하세요" style="width: 30%">
 	    </div>
-	  </div>	
+	  </div>
+	  <div class="form-group">
+	    <label class="control-label col-sm-2" for="">첨부파일:</label>
+	    <div class="col-sm-10">
+	      <input type="file" class="control-label" id="file" name="file">
+	    </div>
+	  </div>	  	
+	    <input type="hidden" name="filename" id="filename" value="">
 	 </form>
     </div>
-    <div class="panel-footer" style="text-align: center;">
-       
+    <div class="panel-footer" style="text-align: center;">       
        <c:if test="${sessionScope.userId==null || sessionScope.userId==''}"> 
-         <input type="button" value="등록" class='btn btn-primary' onclick="add()"/>
+         <input type="button" value="등록" class='btn btn-primary' onclick="add2()"/>
        </c:if>
        <c:if test="${sessionScope.userId!=null && sessionScope.userId!=''}"> 
           <input type="button" value="등록" class='btn btn-primary' onclick="add()" disabled="disabled"/>

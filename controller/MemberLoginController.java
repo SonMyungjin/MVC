@@ -27,7 +27,7 @@ public class MemberLoginController implements Controller{
 		
 		MemberDAO dao=new MemberDAO();
 		String user_name=dao.memberLogin(vo); // 구현
-		// user_name에 값이 있으면 인증에 성공한 것이고, user_name에 값이 없으면 회원인증이 실패한 경우
+		// user_name에 값이 있으면 인증에 성공한것이고, user_name에 값이 없으면 회원인증이 실해한 경우
 		
 		if(user_name !=null && !"".equals(user_name)) {
 			// 성공
