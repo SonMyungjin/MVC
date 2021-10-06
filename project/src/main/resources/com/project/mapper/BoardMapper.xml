@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.mapper.BoardMapper">
+
+	<select id="getList" resultType="com.project.domain.BoardVO">
+		select * from board order by bno desc
+	</select>
+	
+	<insert id="insert">
+        insert into board(bno,title,content,writer)
+        values((select * from (select max(bno)+1 from board) next),#{title},#{content},#{writer})
+	</insert>
+
+	<insert id="insertSelectKey">
+		<selectKey order="BEFORE" keyProperty="bno" resultType="Long">
+		select * from (select max(bno)+1 from board) next
+		</selectKey>
+        insert into board(bno,title,content,writer)
+        values(#{bno},#{title},#{content},#{writer})
+	</insert>
+	
+	<select id="read" resultType="com.project.domain.BoardVO">
+		select * from board where bno = #{bno}
+	</select>
+	
+	<delete id="delete">
+		delete from board where bno = #{bno}	
+	</delete>
+	
+	<update id="update">
+	update board
+	set title = #{title},
+		content = #{content},
+		writer = #{writer},
+		updatedate = now() 
+		where bno = #{bno}
+	</update>
+
+</mapper>
