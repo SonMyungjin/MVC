@@ -5,8 +5,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.project.domain.BoardVO;
+import com.project.util.FileUtils;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -18,6 +20,9 @@ public class BoardMapperTests {
 	
 	@Autowired
 	private BoardMapper boardMapper;
+
+	@Autowired
+	private FileUtils file;
 	
 	@Test
 	public void testGetList() {
@@ -32,6 +37,14 @@ public class BoardMapperTests {
 		vo.setContent("Content 테스트");
 		vo.setWriter("tester");
 		
+		boardMapper.insert(vo);
+		log.info("----------------------");
+		log.info("after insert" + vo.getBno());
+	}
+
+	@Test
+	public void testInsertFile() {
+		BoardVO vo = new BoardVO();
 		boardMapper.insert(vo);
 		log.info("----------------------");
 		log.info("after insert" + vo.getBno());

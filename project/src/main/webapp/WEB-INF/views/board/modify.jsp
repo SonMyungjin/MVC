@@ -29,7 +29,7 @@
 				<div class="form-group">
 					<label>제목</label>
 					<input class="form-control" name="title" style="width: 50%" value="<c:out value='${board.title}'/>">
-				</div>					
+				</div>
 
 				<div class="form-group">
 					<label>내용</label>
@@ -40,6 +40,13 @@
 					<label>작성자</label>
 					<input class="form-control" name="writer" style="width: 15%" value="<c:out value='${board.writer}'/>">
 				</div>					
+				
+				<div class="form-group">
+					<label>첨부파일</label><br>
+					<c:forEach var="file" items="${file}">
+					<a href="#" onclick="fn_fileDown('${file.FNO}'); return false;">${file.ORG_FILE_NAME}</a>(${file.FILE_SIZE}KB)<br>
+					</c:forEach>
+				</div>
 				
 				<button class="btn btn-primary" data-oper='modify'>수정</button>
                 <button class="btn btn-danger" data-oper='remove'>삭제</button>

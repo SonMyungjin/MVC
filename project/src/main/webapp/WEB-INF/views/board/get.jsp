@@ -24,30 +24,72 @@
 					
 				<div class="form-group">
 					<label>번호</label>
-					<input class="form-control" name="title" style="width: 50%" readonly="readonly" value="<c:out value='${board.bno}'/>">
+					<input class="form-control" name="title" style="width: 50%" readonly value="<c:out value='${board.bno}'/>">
 				</div>					
 				
 				<div class="form-group">
 					<label>제목</label>
-					<input class="form-control" name="title" style="width: 50%" readonly="readonly" value="<c:out value='${board.title}'/>">
+					<input class="form-control" name="title" style="width: 50%" readonly value="<c:out value='${board.title}'/>">
 				</div>					
 
 				<div class="form-group">
 					<label>내용</label>
-					<textarea rows="5" cols="50" name="content" class="form-control" style="width: 75%" ><c:out value="${board.content}"/></textarea>
+					<textarea rows="5" cols="50" name="content" class="form-control" style="width: 75%" readonly ><c:out value="${board.content}"/></textarea>
 				</div>					
 
 				<div class="form-group">
 					<label>작성자</label>
-					<input class="form-control" name="writer" style="width: 15%" value="<c:out value='${board.writer}'/>">
+					<input class="form-control" name="writer" style="width: 15%" readonly value="<c:out value='${board.writer}'/>">
 				</div>					
 				
-				<button type="submit" class="btn btn-primary"><a href='/board/list'>확인</a></button>
-                <button type="reset" class="btn btn-warning"><a href='/board/modify?bno=<c:out value="${board.bno}"/>'>수정하기</a></button>
+				<div class="form-group">
+					<label>첨부파일</label><br>
+					<c:forEach var="file" items="${file}">
+					<a href="#" onclick="fn_fileDown('${file.FNO}'); return false;">${file.ORG_FILE_NAME}</a>(${file.FILE_SIZE}KB)<br>
+					</c:forEach>
+				</div>
+				
+				<button data-oper='list' class="btn btn-primary">확인</button>
+                <button data-oper='modify' class="btn btn-warning">수정하기</button>
+                
+                <form name='operForm' id='operForm' method="get">
+                	<input type='hidden' id='bno' name='bno' value='<c:out value="${board.bno}"/>'>
+                	<input type="hidden" id="FNO" name="FNO" value=''/>
+                </form>
 			</div>
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  
+  var operForm = $("#operForm"); 
+  
+  $("button[data-oper='modify']").on("click", function(e){
+    
+    operForm.attr("action","/board/modify").submit();
+    
+  });
+  
+    
+  $("button[data-oper='list']").on("click", function(e){
+    
+    operForm.find("#bno").remove();
+    operForm.attr("action","/board/list")
+    operForm.submit();
+  });  
+});
+
+function fn_fileDown(fileNo){
+	var operForm = $("#operForm"); 
+	$("#FNO").attr("value", fileNo);
+	operForm.attr("action", "/board/fileDown");
+	operForm.submit();
+}
+
+
+</script>
 
 
 <%@include file="../includes/footer.jsp"%>

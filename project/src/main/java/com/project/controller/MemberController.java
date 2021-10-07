@@ -54,6 +54,8 @@ public class MemberController {
 	
 	@GetMapping({"/get","/modify"})
 	public void get(@RequestParam("mno") Long mno, Model model) {
+		
+		log.info("/get or modify");
 		model.addAttribute("member", service.getMember(mno));
 	}
 	

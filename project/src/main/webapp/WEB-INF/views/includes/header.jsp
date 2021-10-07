@@ -59,7 +59,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href='/board/list'>손명진 project</a>
+                <a class="navbar-brand" href='/main'>손명진 project</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -105,13 +105,10 @@
                             <a href="#"><i class="fa fa-sitemap fa-fw"></i> 게시판<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="/board/list">게시판1</a>
+                                    <a href="/board/list">일반 게시판</a>
                                 </li>
                                 <li>
-                                    <a href="/board/list">게시판2</a>
-                                </li>
-                                <li>
-                                    <a href="/board/list">게시판3</a>
+                                    <a href="/board/list">첨부파일 게시판</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->

@@ -20,13 +20,15 @@
 
 			<!-- /.panel-heading -->
 		<div class="panel-body">
-			<form>
+			<form role="form" action="/member/modify" method="post">
+			  <input type="hidden" class="form-control" id="mno" name="mno" style="width: 15%" readonly="readonly" value="<c:out value='${member.mno}'/>">
+			
 			  <div class="form-group">
 			    <label class="control-label col-sm-2" for="id">아이디:</label>
 				    <div class="col-sm-10">
 				    	<input type="text" class="form-control" id="id" name="id" value="<c:out value='${member.id}'/>" style="width: 30%">
 				    </div>
-			  	</div>					
+			  </div>					
 			  
 			<div class="form-group">
 			  <label class="control-label col-sm-2" for="name">이름:</label>
@@ -70,26 +72,27 @@
 			  </div>
 			</div>						
 				
-				<button class="btn btn-primary" data-oper='modify'>수정</button>
-                <button class="btn btn-danger" data-oper='remove'>삭제</button>
-                <button class="btn btn-info" data-oper='list'>리스트</button>
+				<button type="submit" class="btn btn-primary" data-oper='modify'>수정</button>
+                <button type="submit" class="btn btn-danger" data-oper='remove'>삭제</button>
+                <button type="submit" class="btn btn-info" data-oper='list'>리스트</button>
                 </form>
 			</div>
 		</div>
 	</div>
 </div>
 
+<!-- 우편번호 API -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">
      function execDaumPostcode() {
          new daum.Postcode({
              oncomplete: function(data) {
-                 var addr = ''; // 주소 변수
-                 var extraAddr = ''; // 참고항목 변수
+                 var addr = '';
+                 var extraAddr = '';
 
-                 if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                 if (data.userSelectedType === 'R') {
                      addr = data.roadAddress;
-                 } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                 } else {
                      addr = data.jibunAddress;
                  }
 
@@ -117,34 +120,30 @@
      }
   </script>
 
+<!-- button 함수 -->
 <script>
 
 $(document).ready(function() {
 	
 	var formObj = $("form");
 	
-	$('.btn').click(function(e) {
+	$('button').on("click", function(e) {
 		
 		e.preventDefault();
+		
 		var operation = $(this).data("oper");
+		
 		console.log(operation);
 		
 		if(operation === 'list'){
-			self.location = "/member/list";
+			formObj.attr("action","/member/list").attr("method","get");
+			formObj.empty();
 			
 		}else if(operation === 'remove'){
-			formObj.attr("action","/member/remove")
-			.attr("method","post");
-			formObj.submit();
-			
-		}else if(operation === 'modify'){
-			formObj.attr("action","/member/modify")
-			.attr("method","post");
-			formObj.submit();
-			
+			formObj.attr("action","/member/remove");
 		}
-	
-	})
+		formObj.submit();
+	});
 });
 
 </script>

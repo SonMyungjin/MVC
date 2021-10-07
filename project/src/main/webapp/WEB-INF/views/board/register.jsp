@@ -21,7 +21,7 @@
 
 			<!-- /.panel-heading -->
 			<div class="panel-body">
-					<form action="/board/register" method="post">
+					<form action="/board/register" method="post" enctype="multipart/form-data">
 					
 						<div class="form-group">
 							<label>제목</label>
@@ -36,7 +36,13 @@
 						<div class="form-group">
 							<label>작성자</label>
 							<input class="form-control" name="writer" style="width: 15%" placeholder="이름 입력">
+						</div>	
+										
+						<div class="form-group">
+							<label>파일 업로드</label>
+							<input type="file" id ="fileItem" name='uploadFile' style="height: 30px;">
 						</div>					
+						
 						
 						<button type="submit" class="btn btn-primary">제출</button>
                         <button type="reset" class="btn btn-warning">취소</button>
