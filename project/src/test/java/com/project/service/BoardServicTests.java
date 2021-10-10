@@ -8,7 +8,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.project.domain.BoardVO;
-import com.project.mapper.BoardMapperTests;
 
 import lombok.extern.log4j.Log4j;
 
@@ -30,16 +29,5 @@ public class BoardServicTests {
 		service.getList().forEach(board -> log.info(board));
 	}
 	
-	@Test
-	public void testRegister(BoardVO vo, MultipartHttpServletRequest mpRequest) {
-		vo.setTitle("Test 테스트2");
-		vo.setContent("Content 테스트2");
-		vo.setWriter("tester2");
-		
-		long bno = service.register(vo,mpRequest);
-		log.info("BNO : " + bno);
-		
-		
-	}
 	
 }

@@ -8,7 +8,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.project.domain.BoardVO;
-import com.project.util.FileUtils;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -21,9 +20,6 @@ public class BoardMapperTests {
 	@Autowired
 	private BoardMapper boardMapper;
 
-	@Autowired
-	private FileUtils file;
-	
 	@Test
 	public void testGetList() {
 		 

@@ -1,6 +1,7 @@
 package com.project.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.Data;
 
@@ -14,4 +15,5 @@ public class BoardVO {
 	private Date regdate;
 	private Date updatedate;
 	
+	private List<BoardAttachVO> attachList;
 }

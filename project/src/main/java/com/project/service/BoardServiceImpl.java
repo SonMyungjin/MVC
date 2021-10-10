@@ -1,51 +1,47 @@
 package com.project.service;
 
 import java.util.List;
-import java.util.Map;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.project.domain.BoardAttachVO;
 import com.project.domain.BoardVO;
+import com.project.mapper.BoardAttachMapper;
 import com.project.mapper.BoardMapper;
-import com.project.util.FileUtils;
 
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 @Service
 @Log4j
-@RequiredArgsConstructor
-@ToString
 public class BoardServiceImpl implements BoardService{
 
-	private final BoardMapper mapper;
 	
-	@Resource(name="fileUtils")
-	private FileUtils fileUtils;
-	
+	@Setter(onMethod_ = @Autowired)
+	private BoardMapper mapper;
+
+	@Setter(onMethod_ = @Autowired)
+	private BoardAttachMapper attachMapper;
+
+	@Transactional
 	@Override
-	public Long register(BoardVO board, MultipartHttpServletRequest mpRequest) {
+	public void register(BoardVO board) {
+
+		log.info("register......" + board);
+
 		mapper.insertSelectKey(board);
-		
-		List<Map<String, Object>> list;
-		try {
-			list = fileUtils.parseInsertFileInfo(board, mpRequest);
-			int size = list.size();
-			
-			System.out.println(size);
-			for(int i=0; i<size; i++){ 
-				
-				System.out.println(list.get(i));
-				mapper.insertFile(list.get(i)); 
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
-		return board.getBno();
+
+		if (board.getAttachList() == null || board.getAttachList().size() <= 0) {
+			return;
+		}
+
+		board.getAttachList().forEach(attach -> {
+
+			attach.setBno(board.getBno());
+			attachMapper.insert(attach);
+		});
 	}
 
 	@Override
@@ -53,14 +49,32 @@ public class BoardServiceImpl implements BoardService{
 		return mapper.read(bno);
 	}
 
+	@Transactional
 	@Override
-	public int modify(BoardVO board) {
-		return mapper.update(board);
+	public boolean modify(BoardVO board) {
+
+		log.info("modify......" + board);
+
+		attachMapper.deleteAll(board.getBno());
+
+		boolean modifyResult = mapper.update(board) == 1;
+		
+		if (modifyResult && board.getAttachList().size() > 0) {
+
+			board.getAttachList().forEach(attach -> {
+
+				attach.setBno(board.getBno());
+				attachMapper.insert(attach);
+			});
+		}
+
+		return modifyResult;
 	}
 
 	@Override
-	public int remove(Long bno) {
-		return mapper.delete(bno);
+	public boolean remove(Long bno) {
+		attachMapper.deleteAll(bno);
+		return mapper.delete(bno) == 1;
 	}
 
 	@Override
@@ -68,16 +82,22 @@ public class BoardServiceImpl implements BoardService{
 		return mapper.getList();
 	}
 	
+	//게시물의 첨부파일들의 목록 가져오기
 	@Override
-	public List<Map<String, Object>> selectFileList(Long bno) {
-		return mapper.selectFileList(bno);
+	public List<BoardAttachVO> getAttachList(Long bno) {
+
+		log.info("get Attach list by bno" + bno);
+
+		return attachMapper.findByBno(bno);
 	}
 	
 	@Override
-	public Map<String, Object> selectFileInfo(Map<String, Object> map) {
-		return mapper.selectFileInfo(map);
+	public void removeAttach(Long bno) {
+
+		log.info("remove all attach files");
+
+		attachMapper.deleteAll(bno);
 	}
-	
-	
+
 	
 }

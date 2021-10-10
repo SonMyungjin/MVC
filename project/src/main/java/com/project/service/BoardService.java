@@ -1,27 +1,24 @@
 package com.project.service;
 
 import java.util.List;
-import java.util.Map;
 
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
+import com.project.domain.BoardAttachVO;
 import com.project.domain.BoardVO;
 
 public interface BoardService {
 
-	Long register(BoardVO board, MultipartHttpServletRequest mpRequest);
+	public void register(BoardVO board);
 	
 	BoardVO get(Long bno);
 	
-	int modify(BoardVO board);
+	boolean modify(BoardVO board);
 	
-	int remove(Long bno);
+	boolean remove(Long bno);
 	
 	List<BoardVO> getList();
+	
+	public List<BoardAttachVO> getAttachList(Long bno);
 
-	List<Map<String, Object>> selectFileList(Long bno);
-	
-	Map<String, Object> selectFileInfo(Map<String, Object> map);
-	
+	public void removeAttach(Long bno);
 
 }
